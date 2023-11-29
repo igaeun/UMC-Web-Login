@@ -56,7 +56,7 @@ function LoginComponent () {
     setLoading(true) // 로딩 시작
     axios.post(LOGIN_API_KEY, { id, pw: password })
       .then((response) => {
-        const { code, token, userId } = response.data
+        const { code, result } = response.data
         if (code === 400) {
           setTimeout(() => alert('비어있는 내용입니다.'), 1500)
         } else if (code === 401) {
@@ -64,9 +64,10 @@ function LoginComponent () {
         } else if (code === 402) {
           setTimeout(() => alert('비밀번호가 일치하지 않습니다.'), 1500)
         } else {
-          localStorage.setItem('token', token)
-          localStorage.setItem('userId', userId)
-          dispatch(loginUser({ id: userId, token }))
+          const { userId, AccessToken } = result
+          localStorage.setItem('token', AccessToken)
+          localStorage.setItem('id', userId)
+          dispatch(loginUser({ id: userId, token: AccessToken }))
           setTimeout(() => setMsg('로그인 성공!'), 1500)
         }
       })
